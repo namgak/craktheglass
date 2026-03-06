@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatForge | Music Mixer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script> <!-- Icons -->
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i data-lucide="music-4"></i>
+                <h1>BeatForge</h1>
+            </div>
+            <div class="global-controls">
+                <button id="btn-master-play" class="btn btn-primary" title="Play All">
+                    <i data-lucide="play"></i> <span id="master-play-text">Play Mix</span>
+                </button>
+                <button id="btn-master-stop" class="btn btn-secondary" title="Stop All">
+                    <i data-lucide="square"></i> Stop Mix
+                </button>
+                <button id="btn-export" class="btn btn-accent" title="Download Mix">
+                    <i data-lucide="download"></i> Export MP3
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Sidebar / Tools -->
+            <aside class="sidebar">
+                <section class="tool-section">
+                    <h2>Import Local File</h2>
+                    <div class="file-upload">
+                        <input type="file" id="local-file-input" accept="audio/*">
+                        <label for="local-file-input" class="upload-area">
+                            <i data-lucide="upload-cloud"></i>
+                            <span>Click or Drag Audio File</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="tool-section">
+                    <h2>YouTube Import</h2>
+                    <div class="youtube-form">
+                        <input type="text" id="yt-url" placeholder="YouTube URL" autocomplete="off">
+                        <div id="yt-preview-container" class="yt-preview hidden">
+                            <!-- Iframe will be injected here -->
+                        </div>
+                        <div class="time-inputs">
+                            <input type="number" id="yt-start" placeholder="Start (sec)" min="0">
+                            <input type="number" id="yt-end" placeholder="End (sec)" min="1">
+                        </div>
+                        <button id="btn-import-yt" class="btn btn-outline">
+                            <i data-lucide="youtube"></i> Extract Audio
+                        </button>
+                    </div>
+                </section>
+
+                <section class="tool-section">
+                    <h2>Default Sounds (Synth)</h2>
+                    <div class="synth-pads">
+                        <button class="pad-btn" data-sound="kick">Kick</button>
+                        <button class="pad-btn" data-sound="snare">Snare</button>
+                        <button class="pad-btn" data-sound="hihat">Hi-Hat</button>
+                        <button class="pad-btn" data-sound="beep">Beep fx</button>
+                    </div>
+                    <p class="section-desc">Click to preview, drag to workspace or click "Add to Track" if previewed.
+                    </p>
+                </section>
+            </aside>
+
+            <!-- Workspace / Tracks -->
+            <section class="workspace">
+                <div class="track-header">
+                    <h2>Mixing Workspace</h2>
+                    <div class="workspace-controls">
+                        <div class="selected-clip-info" id="selected-info">
+                            <span>Selected: <span id="selected-name">None</span></span>
+                            <div class="speed-control">
+                                <label>Speed:</label>
+                                <input type="number" id="clip-speed" step="0.1" min="-2.0" max="2.0" value="1.0"
+                                    title="Playback speed (-2.0 to 2.0)">
+                                <label>In(s):</label>
+                                <input type="number" id="clip-fade-in" step="0.1" min="0" max="10" value="0"
+                                    title="Fade-in duration in seconds">
+                                <label>Out(s):</label>
+                                <input type="number" id="clip-fade-out" step="0.1" min="0" max="10" value="0"
+                                    title="Fade-out duration in seconds">
+                                <button id="btn-apply-settings" class="btn-primary btn-sm"
+                                    title="Apply Speed & Fades">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tracks-container" id="tracks-container">
+                        <div class="time-ruler-wrapper">
+                            <div class="time-ruler" id="time-ruler">
+                                <!-- Time markers will be generated here -->
+                            </div>
+                        </div>
+                        <div id="playhead" class="playhead"></div>
+                        <!-- Tracks will be dynamically injected here -->
+                        <div class="empty-state" id="empty-state">
+                            <i data-lucide="layers"></i>
+                            <p>No tracks added yet. Import a file or extract from YouTube to start mixing.</p>
+                        </div>
+                    </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Template for a single track -->
+    <template id="track-template">
+        <div class="track">
+            <div class="track-controls">
+                <div class="track-info">
+                    <span class="track-name">Track Name</span>
+                </div>
+                <div class="track-actions">
+                    <button class="btn-icon btn-t-play" title="Play Track"><i data-lucide="play-circle"></i></button>
+                    <button class="btn-icon btn-t-split" title="Split at Playhead"><i
+                            data-lucide="scissors"></i></button>
+                    <button class="btn-icon btn-t-remove-clip" title="Delete Selected Clip"><i
+                            data-lucide="trash-2"></i></button>
+                    <button class="btn-icon btn-t-remove-track" title="Remove Track"><i
+                            data-lucide="x-circle"></i></button>
+                </div>
+                <div class="volume-control">
+                    <i data-lucide="volume-2"></i>
+                    <input type="range" class="vol-slider" min="0" max="1" step="0.01" value="1">
+                </div>
+            </div>
+            <div class="track-timeline">
+                <div class="clip">
+                    <canvas class="waveform"></canvas>
+                    <div class="clip-label">Audio Clip</div>
+                    <div class="trim-handle trim-left"></div>
+                    <div class="trim-handle trim-right"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="audioEngine.js"></script>
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

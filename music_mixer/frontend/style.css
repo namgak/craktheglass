@@ -1,0 +1,707 @@
+:root {
+    --bg-color: #0f1016;
+    --panel-bg: #1c1d25;
+    --track-bg: #272935;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --accent: #10b981;
+    --accent-hover: #059669;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --waveform: rgba(99, 102, 241, 0.7);
+    --pink-gradient: linear-gradient(90deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
+    --wave-gradient: linear-gradient(270deg, #ff00c1, #9600ff, #ff00c1);
+}
+
+@keyframes shimmerWave {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+.shimmer-text {
+    background: var(--pink-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerWave 3s linear infinite;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 1.25rem;
+}
+
+.logo h1 {
+    background: linear-gradient(90deg, #ff00c1, #ff8c00, #40e0d0, #ff00c1);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerWave 3s linear infinite;
+}
+
+.logo i,
+.logo svg {
+    /* Use filter to colorize the SVG without setting color: transparent */
+    filter:
+        invert(17%) sepia(89%) saturate(7480%) hue-rotate(314deg) brightness(110%) contrast(110%);
+    animation: shimmerIconHue 3s linear infinite;
+}
+
+@keyframes shimmerIconHue {
+    0% {
+        filter: invert(17%) sepia(89%) saturate(7480%) hue-rotate(314deg) brightness(110%) contrast(110%);
+    }
+
+    33% {
+        filter: invert(40%) sepia(90%) saturate(3000%) hue-rotate(260deg) brightness(120%) contrast(110%);
+    }
+
+    66% {
+        filter: invert(80%) sepia(20%) saturate(2000%) hue-rotate(150deg) brightness(110%);
+    }
+
+    100% {
+        filter: invert(17%) sepia(89%) saturate(7480%) hue-rotate(314deg) brightness(110%) contrast(110%);
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Header */
+.header {
+    height: 64px;
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.speed-control label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.speed-control input[type="number"] {
+    width: 60px;
+    padding: 6px;
+    font-size: 0.85rem;
+    height: 32px;
+}
+
+.btn-primary.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+.global-controls {
+    display: flex;
+    gap: 12px;
+}
+
+
+/* Buttons */
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Play button active state — must come AFTER .btn-primary to win specificity */
+#btn-master-play.is-playing {
+    background: linear-gradient(90deg, #ff0080, #9600ff, #40e0d0, #ff0080);
+    background-size: 200% auto;
+    animation: shimmerWave 2s linear infinite;
+    border: none;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 0, 128, 0.6), 0 0 40px rgba(150, 0, 255, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--track-bg);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background-color: var(--border);
+}
+
+.btn-accent {
+    background-color: var(--accent);
+}
+
+.btn-accent:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.btn-danger:hover {
+    background-color: var(--danger);
+    color: white;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    color: var(--text-main);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-icon.btn-t-remove:hover {
+    color: var(--danger);
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 320px;
+    background-color: var(--panel-bg);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tool-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tool-section h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+}
+
+.section-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* File Upload */
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 16px;
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: var(--track-bg);
+    color: var(--text-muted);
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: rgba(99, 102, 241, 0.05);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* YouTube Form */
+.youtube-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.yt-preview {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: black;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.yt-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--track-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.time-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+/* Synth Pads */
+.synth-pads {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.pad-btn {
+    background-color: var(--track-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 12px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 0 2px 0 var(--border);
+}
+
+.pad-btn:active,
+.pad-btn.active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 var(--border);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Workspace */
+.workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    overflow: hidden;
+    position: relative;
+    padding: 24px;
+}
+
+.track-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.track-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.time-ruler-wrapper {
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-color);
+    z-index: 100;
+    padding-top: 5px;
+}
+
+.time-ruler {
+    height: 35px;
+    background-color: var(--panel-bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    position: relative;
+    margin-left: 200px;
+    /* Aligns with timeline */
+    min-width: 5000px;
+    /* Enough for 100 seconds at 50px/s */
+}
+
+.tracks-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    /* Enable horizontal scroll */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 20px;
+    /* Space for scrollbar */
+}
+
+/* Ensure the horizontal scroll works by giving tracks a large min-width or letting content define it */
+.track {
+    display: flex;
+    background-color: var(--panel-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    height: 100px;
+    min-width: 3000px;
+    /* Base width for 60 seconds at 50px/s */
+    overflow: visible;
+    /* Allow sticky children */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.empty-state i {
+    width: 48px;
+    height: 48px;
+    color: var(--border);
+}
+
+/* Tracks */
+.track {
+    display: flex;
+    background-color: var(--panel-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    height: 100px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.track-controls {
+    width: 200px;
+    background-color: var(--panel-bg);
+    border-right: 1px solid var(--border);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: sticky;
+    left: 0;
+    z-index: 1100;
+    /* Higher than playhead (1000) to keep controls on top */
+}
+
+.track-name {
+    font-weight: 600;
+    color: var(--text-bright);
+    font-size: 0.9rem;
+    cursor: text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.track-name-input {
+    background: var(--bg-card);
+    border: 1px solid var(--primary);
+    color: var(--text-bright);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 2px 4px;
+    border-radius: 4px;
+    width: 140px;
+    outline: none;
+}
+
+.track-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+}
+
+.volume-control i {
+    width: 16px;
+    height: 16px;
+}
+
+.vol-slider {
+    flex: 1;
+    appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+}
+
+.vol-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+}
+
+.track-timeline {
+    flex: 1;
+    position: relative;
+    background-color: var(--track-bg);
+    overflow: hidden;
+}
+
+/* Audio Clip */
+.clip {
+    position: absolute;
+    top: 10%;
+    height: 80%;
+    background-color: rgba(99, 102, 241, 0.2);
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    cursor: move;
+    user-select: none;
+    transition: box-shadow 0.2s, background-color 0.2s;
+}
+
+.clip.selected {
+    background-color: rgba(16, 185, 129, 0.3);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    z-index: 2;
+}
+
+.waveform {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+.clip-label {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+}
+
+/* Trim Handles */
+.trim-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background-color: var(--primary);
+    cursor: ew-resize;
+    z-index: 5;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.trim-handle:hover {
+    opacity: 1;
+}
+
+.trim-left {
+    left: 0;
+    border-radius: 4px 0 0 4px;
+}
+
+.trim-right {
+    right: 0;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Playhead Marker */
+.playhead {
+    position: absolute;
+    top: 0;
+    height: 2000px;
+    /* Very tall to cover all tracks */
+    width: 2px;
+    background-color: #ff4757;
+    z-index: 1000;
+    cursor: ew-resize;
+    pointer-events: auto !important;
+    box-shadow: 0 0 8px rgba(255, 71, 87, 0.8);
+    margin-left: 200px;
+    /* Offset to align with the timeline part */
+    pointer-events: none;
+    /* Let clicks pass through unless on the handle? No, we handle drag globally */
+}
+
+.playhead::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    /* Move it up towards/into the ruler */
+    left: -7px;
+    width: 16px;
+    height: 16px;
+    background-color: #ff4757;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-135deg);
+    cursor: grab;
+    pointer-events: auto;
+    /* The handle part is still clickable */
+}
+
+/* Ensure the playhead is clickable for dragging */
+.playhead {
+    pointer-events: auto;
+}
+
+/* Speed Control Panel */
+.workspace-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.selected-clip-info {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.85rem;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.speed-control input {
+    width: 70px;
+    padding: 4px 8px;
+}
+
+/* Utilities */
+.hidden {
+    display: none !important;
+}
