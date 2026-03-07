@@ -55,6 +55,7 @@ class AudioEngine {
             duration: buffer.duration,
             isMuted: false,
             volume: 1,
+            pitch: 0,
             playbackRate: 1,
             fadeInDuration: 0,
             fadeOutDuration: 0
@@ -75,6 +76,16 @@ class AudioEngine {
             if (this.isPlaying && track.source) {
                 this.stopTrack(id);
                 this.playTrackLogic(track, (this.ctx.currentTime - this.startTime) - track.startOffset);
+            }
+        }
+    }
+
+    setPitch(id, pitch) {
+        const track = this.tracks.get(id);
+        if (track) {
+            track.pitch = pitch;
+            if (this.isPlaying && track.source) {
+                track.source.detune.value = track.pitch * 100;
             }
         }
     }
@@ -144,6 +155,7 @@ class AudioEngine {
         track.source = this.ctx.createBufferSource();
         track.source.buffer = track.buffer;
         track.source.playbackRate.value = Math.abs(track.playbackRate || 1);
+        track.source.detune.value = (track.pitch || 0) * 100;
         track.source.connect(track.gainNode);
         
         // Fades
@@ -377,6 +389,7 @@ class AudioEngine {
             const gainNode = offlineCtx.createGain();
             source.buffer = track.buffer;
             source.playbackRate.value = Math.abs(track.playbackRate);
+            source.detune.value = (track.pitch || 0) * 100;
             
             gainNode.gain.value = track.isMuted ? 0 : track.volume;
             

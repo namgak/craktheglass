@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const playhead = document.getElementById('playhead');
     const selectedNameDisplay = document.getElementById('selected-name');
+    const clipPitchInput = document.getElementById('clip-pitch');
     const clipSpeedInput = document.getElementById('clip-speed');
     const clipFadeInInput = document.getElementById('clip-fade-in');
     const clipFadeOutInput = document.getElementById('clip-fade-out');
@@ -69,10 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apply Settings (Speed & Fades)
     btnApplySettings.addEventListener('click', () => {
         if (selectedTrackId) {
+            const pitch = parseFloat(clipPitchInput.value) || 0;
             const speed = parseFloat(clipSpeedInput.value);
             const fadeIn = parseFloat(clipFadeInInput.value) || 0;
             const fadeOut = parseFloat(clipFadeOutInput.value) || 0;
 
+            engine.setPitch(selectedTrackId, pitch);
             engine.setPlaybackRate(selectedTrackId, speed);
             engine.setFade(selectedTrackId, 'in', fadeIn);
             engine.setFade(selectedTrackId, 'out', fadeOut);
@@ -342,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedTrackId = trackId;
             selectedNameDisplay.innerText = name;
             const track = engine.tracks.get(trackId);
+            clipPitchInput.value = track.pitch || 0;
             clipSpeedInput.value = track.playbackRate;
             clipFadeInInput.value = track.fadeInDuration;
             clipFadeOutInput.value = track.fadeOutDuration;
